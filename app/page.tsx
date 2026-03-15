@@ -63,26 +63,30 @@ export default function Home() {
 
   return (
 
-<div className="min-h-screen bg-[#f4f4f4] flex flex-col items-center pt-20">
+<div className="min-h-screen bg-gray-100 flex flex-col items-center pt-12 px-4">
 
-<h1 className="text-4xl font-bold text-gray-800 mb-8">
+<h1 className="text-3xl sm:text-4xl font-bold text-gray-800 mb-8 text-center">
 Ingredient Cost Calculator
 </h1>
 
-<div className="bg-white rounded-xl shadow-md w-[950px] p-8">
+<div className="bg-white rounded-xl shadow-md w-full max-w-5xl p-4 sm:p-8">
+
+{/* DESKTOP TABLE */}
+
+<div className="hidden md:block">
 
 <table className="w-full text-left">
 
 <thead>
 
-<tr className="bg-gray-100 text-gray-700 text-lg">
+<tr className="bg-gray-200 text-gray-700">
 
-<th className="p-4 rounded-l-lg">Ingredient</th>
-<th className="p-4">Price (฿)</th>
+<th className="p-4">Ingredient</th>
+<th className="p-4">Price</th>
 <th className="p-4">Total g</th>
 <th className="p-4">Used g</th>
 <th className="p-4 text-right">Cost</th>
-<th className="p-4 rounded-r-lg"></th>
+<th className="p-4"></th>
 
 </tr>
 
@@ -91,70 +95,54 @@ Ingredient Cost Calculator
 <tbody>
 
 {rows.map((row,i)=>(
-<tr key={i} className="border-b hover:bg-gray-50">
+<tr key={i} className="border-b">
 
 <td className="p-3">
-
 <input
-className="border border-gray-300 rounded-lg px-3 py-2 w-full"
-placeholder="Butter"
+className="border rounded px-3 py-2 w-full"
 value={row.name}
 onChange={(e)=>update(i,"name",e.target.value)}
 />
-
 </td>
 
 <td className="p-3">
-
 <input
 type="number"
-className="border border-gray-300 rounded-lg px-3 py-2 w-full"
-placeholder="200"
+className="border rounded px-3 py-2 w-full"
 value={row.price}
 onChange={(e)=>update(i,"price",e.target.value)}
 />
-
 </td>
 
 <td className="p-3">
-
 <input
 type="number"
-className="border border-gray-300 rounded-lg px-3 py-2 w-full"
-placeholder="500"
+className="border rounded px-3 py-2 w-full"
 value={row.total}
 onChange={(e)=>update(i,"total",e.target.value)}
 />
-
 </td>
 
 <td className="p-3">
-
 <input
 type="number"
-className="border border-gray-300 rounded-lg px-3 py-2 w-full"
-placeholder="150"
+className="border rounded px-3 py-2 w-full"
 value={row.used}
 onChange={(e)=>update(i,"used",e.target.value)}
 />
-
 </td>
 
-<td className="p-3 text-right font-bold text-green-700 text-lg">
-
+<td className="p-3 text-right font-bold text-green-700">
 {row.cost.toFixed(2)} ฿
-
 </td>
 
-<td className="p-3 text-right">
-
+<td className="p-3">
 <button
 onClick={()=>deleteRow(i)}
-className="bg-red-500 hover:bg-red-600 text-white px-3 py-2 rounded-lg"
+className="bg-red-500 text-white px-3 py-2 rounded"
 >
 🗑
 </button>
-
 </td>
 
 </tr>
@@ -164,32 +152,96 @@ className="bg-red-500 hover:bg-red-600 text-white px-3 py-2 rounded-lg"
 
 </table>
 
-<div className="flex items-center justify-between mt-10">
+</div>
 
-<div>
+{/* MOBILE CARDS */}
+
+<div className="md:hidden space-y-4">
+
+{rows.map((row,i)=>(
+
+<div key={i} className="border rounded-lg p-4 bg-gray-50 space-y-3">
+
+<input
+className="border rounded px-3 py-2 w-full"
+placeholder="Ingredient"
+value={row.name}
+onChange={(e)=>update(i,"name",e.target.value)}
+/>
+
+<input
+type="number"
+className="border rounded px-3 py-2 w-full"
+placeholder="Price"
+value={row.price}
+onChange={(e)=>update(i,"price",e.target.value)}
+/>
+
+<input
+type="number"
+className="border rounded px-3 py-2 w-full"
+placeholder="Total grams"
+value={row.total}
+onChange={(e)=>update(i,"total",e.target.value)}
+/>
+
+<input
+type="number"
+className="border rounded px-3 py-2 w-full"
+placeholder="Used grams"
+value={row.used}
+onChange={(e)=>update(i,"used",e.target.value)}
+/>
+
+<div className="flex justify-between items-center">
+
+<p className="font-bold text-green-700 text-lg">
+{row.cost.toFixed(2)} ฿
+</p>
+
+<button
+onClick={()=>deleteRow(i)}
+className="bg-red-500 text-white px-3 py-2 rounded"
+>
+Delete
+</button>
+
+</div>
+
+</div>
+
+))}
+
+</div>
+
+{/* BOTTOM AREA */}
+
+<div className="flex flex-col sm:flex-row items-center justify-between mt-8 gap-4">
+
+<div className="text-center sm:text-left">
 
 <p className="text-gray-500 text-sm">
 Total Cost
 </p>
 
-<p className="text-3xl font-bold text-green-700">
+<p className="text-2xl sm:text-3xl font-bold text-green-700">
 {totalCost().toFixed(2)} ฿
 </p>
 
 </div>
 
-<div className="flex gap-4">
+<div className="flex flex-col sm:flex-row gap-3 w-full sm:w-auto">
 
 <button
 onClick={addRow}
-className="bg-orange-500 hover:bg-orange-600 text-white px-6 py-2 rounded-lg font-medium"
+className="bg-orange-500 text-white px-6 py-2 rounded-lg w-full sm:w-auto"
 >
 + Add Ingredient
 </button>
 
 <button
 onClick={exportExcel}
-className="bg-green-600 hover:bg-green-700 text-white px-6 py-2 rounded-lg font-medium"
+className="bg-green-600 text-white px-6 py-2 rounded-lg w-full sm:w-auto"
 >
 Export Excel
 </button>
