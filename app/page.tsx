@@ -45,6 +45,7 @@ export default function Home() {
   function exportExcel(){
 
     const worksheet = XLSX.utils.json_to_sheet(rows);
+
     const workbook = XLSX.utils.book_new();
 
     XLSX.utils.book_append_sheet(workbook,worksheet,"Cost");
@@ -69,7 +70,7 @@ export default function Home() {
 Ingredient Cost Calculator
 </h1>
 
-<div className="bg-white rounded-xl shadow-md w-full max-w-5xl p-4 sm:p-8">
+<div className="bg-white rounded-xl shadow-md w-full max-w-6xl p-4 sm:p-8">
 
 {/* DESKTOP TABLE */}
 
@@ -98,11 +99,21 @@ Ingredient Cost Calculator
 <tr key={i} className="border-b">
 
 <td className="p-3">
+
+<div className="flex items-center gap-3">
+
+<span className="text-gray-500 font-medium w-14">
+No.{i+1}
+</span>
+
 <input
 className="border rounded px-3 py-2 w-full"
 value={row.name}
 onChange={(e)=>update(i,"name",e.target.value)}
 />
+
+</div>
+
 </td>
 
 <td className="p-3">
@@ -136,10 +147,10 @@ onChange={(e)=>update(i,"used",e.target.value)}
 {row.cost.toFixed(2)} ฿
 </td>
 
-<td className="p-3">
+<td className="p-3 text-right">
 <button
 onClick={()=>deleteRow(i)}
-className="bg-red-500 text-white px-3 py-2 rounded"
+className="bg-red-500 hover:bg-red-600 text-white px-3 py-2 rounded-lg"
 >
 🗑
 </button>
@@ -154,13 +165,17 @@ className="bg-red-500 text-white px-3 py-2 rounded"
 
 </div>
 
-{/* MOBILE CARDS */}
+{/* MOBILE VIEW */}
 
 <div className="md:hidden space-y-4">
 
 {rows.map((row,i)=>(
 
 <div key={i} className="border rounded-lg p-4 bg-gray-50 space-y-3">
+
+<p className="text-gray-500 font-medium">
+No.{i+1}
+</p>
 
 <input
 className="border rounded px-3 py-2 w-full"
@@ -180,7 +195,7 @@ onChange={(e)=>update(i,"price",e.target.value)}
 <input
 type="number"
 className="border rounded px-3 py-2 w-full"
-placeholder="Total grams"
+placeholder="Total g"
 value={row.total}
 onChange={(e)=>update(i,"total",e.target.value)}
 />
@@ -188,7 +203,7 @@ onChange={(e)=>update(i,"total",e.target.value)}
 <input
 type="number"
 className="border rounded px-3 py-2 w-full"
-placeholder="Used grams"
+placeholder="Used g"
 value={row.used}
 onChange={(e)=>update(i,"used",e.target.value)}
 />
@@ -201,7 +216,7 @@ onChange={(e)=>update(i,"used",e.target.value)}
 
 <button
 onClick={()=>deleteRow(i)}
-className="bg-red-500 text-white px-3 py-2 rounded"
+className="bg-red-500 text-white px-3 py-2 rounded-lg"
 >
 Delete
 </button>
@@ -214,7 +229,7 @@ Delete
 
 </div>
 
-{/* BOTTOM AREA */}
+{/* TOTAL + BUTTONS */}
 
 <div className="flex flex-col sm:flex-row items-center justify-between mt-8 gap-4">
 
@@ -234,14 +249,14 @@ Total Cost
 
 <button
 onClick={addRow}
-className="bg-orange-500 text-white px-6 py-2 rounded-lg w-full sm:w-auto"
+className="bg-orange-500 hover:bg-orange-600 text-white px-6 py-2 rounded-lg w-full sm:w-auto"
 >
 + Add Ingredient
 </button>
 
 <button
 onClick={exportExcel}
-className="bg-green-600 text-white px-6 py-2 rounded-lg w-full sm:w-auto"
+className="bg-green-600 hover:bg-green-700 text-white px-6 py-2 rounded-lg w-full sm:w-auto"
 >
 Export Excel
 </button>
