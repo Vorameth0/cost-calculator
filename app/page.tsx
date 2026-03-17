@@ -2,7 +2,6 @@
 
 import { useState } from "react";
 import * as XLSX from "xlsx";
-import { saveAs } from "file-saver";
 
 export default function Home() {
 
@@ -42,33 +41,55 @@ export default function Home() {
     return rows.reduce((sum,r)=> sum + Number(r.cost),0);
   }
 
+  // 🔥 Detect mobile
+  function isMobile(){
+    return /iPhone|iPad|iPod|Android/i.test(navigator.userAgent);
+  }
+
+  // 📊 Excel (PC)
   function exportExcel(){
 
-  const worksheet = XLSX.utils.json_to_sheet(rows);
-  const workbook = XLSX.utils.book_new();
+    const worksheet = XLSX.utils.json_to_sheet(rows);
+    const workbook = XLSX.utils.book_new();
 
-  XLSX.utils.book_append_sheet(workbook, worksheet, "Cost");
+    XLSX.utils.book_append_sheet(workbook, worksheet, "Cost");
 
-  const excelBuffer = XLSX.write(workbook, {
-    bookType: "xlsx",
-    type: "array"
-  });
+    XLSX.writeFile(workbook, "ingredient_cost.xlsx");
+  }
 
-  const blob = new Blob([excelBuffer], {
-    type: "application/vnd.openxmlformats-officedocument.spreadsheetml.sheet"
-  });
+  // 📱 CSV (Mobile)
+  function exportCSV(){
 
-  const url = window.URL.createObjectURL(blob);
+    const header = ["Ingredient","Price","Total g","Used g","Cost"];
 
-  const link = document.createElement("a");
-  link.href = url;
-  link.download = "ingredient_cost.xlsx";
+    const rowsData = rows.map(r => [
+      r.name,
+      r.price,
+      r.total,
+      r.used,
+      r.cost.toFixed(2)
+    ]);
 
-  document.body.appendChild(link);
-  link.click();
+    const csvContent =
+      [header, ...rowsData]
+        .map(e => e.join(","))
+        .join("\n");
 
-  document.body.removeChild(link);
-}
+    const blob = new Blob([csvContent], { type: "text/csv" });
+
+    const url = window.URL.createObjectURL(blob);
+
+    window.open(url);
+  }
+
+  // 🔥 Smart Export
+  function handleExport(){
+    if(isMobile()){
+      exportCSV();
+    } else {
+      exportExcel();
+    }
+  }
 
   return (
 
@@ -173,7 +194,7 @@ className="bg-red-500 hover:bg-red-600 text-white px-3 py-2 rounded-lg"
 
 </div>
 
-{/* MOBILE VIEW */}
+{/* MOBILE */}
 
 <div className="md:hidden space-y-4">
 
@@ -237,7 +258,7 @@ Delete
 
 </div>
 
-{/* TOTAL + BUTTONS */}
+{/* BOTTOM */}
 
 <div className="flex flex-col sm:flex-row items-center justify-between mt-8 gap-4">
 
@@ -257,16 +278,16 @@ Total Cost
 
 <button
 onClick={addRow}
-className="bg-orange-500 hover:bg-orange-600 text-white px-6 py-2 rounded-lg w-full sm:w-auto"
+className="bg-orange-500 text-white px-6 py-2 rounded-lg w-full sm:w-auto"
 >
 + Add Ingredient
 </button>
 
 <button
-onClick={exportExcel}
-className="bg-green-600 hover:bg-green-700 text-white px-6 py-2 rounded-lg w-full sm:w-auto"
+onClick={handleExport}
+className="bg-green-600 text-white px-6 py-2 rounded-lg w-full sm:w-auto"
 >
-Export Excel
+Download File
 </button>
 
 </div>
