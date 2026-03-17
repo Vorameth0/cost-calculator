@@ -44,23 +44,31 @@ export default function Home() {
 
   function exportExcel(){
 
-    const worksheet = XLSX.utils.json_to_sheet(rows);
+  const worksheet = XLSX.utils.json_to_sheet(rows);
+  const workbook = XLSX.utils.book_new();
 
-    const workbook = XLSX.utils.book_new();
+  XLSX.utils.book_append_sheet(workbook, worksheet, "Cost");
 
-    XLSX.utils.book_append_sheet(workbook,worksheet,"Cost");
+  const excelBuffer = XLSX.write(workbook, {
+    bookType: "xlsx",
+    type: "array"
+  });
 
-    const excelBuffer = XLSX.write(workbook,{
-      bookType:"xlsx",
-      type:"array"
-    });
+  const blob = new Blob([excelBuffer], {
+    type: "application/vnd.openxmlformats-officedocument.spreadsheetml.sheet"
+  });
 
-    const data = new Blob([excelBuffer],{
-      type:"application/octet-stream"
-    });
+  const url = window.URL.createObjectURL(blob);
 
-    saveAs(data,"ingredient_cost.xlsx");
-  }
+  const link = document.createElement("a");
+  link.href = url;
+  link.download = "ingredient_cost.xlsx";
+
+  document.body.appendChild(link);
+  link.click();
+
+  document.body.removeChild(link);
+}
 
   return (
 
