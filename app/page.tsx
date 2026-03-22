@@ -273,31 +273,59 @@ Delete
 
 {/* BOTTOM */}
 
-<div className="flex flex-col sm:flex-row items-center justify-between mt-8 gap-4">
+<div className="mt-8 w-full">
 
-<div>
+{/* TOTAL */}
+<div className="mb-6 text-center sm:text-left">
 <p className="text-gray-500 text-sm">Total Cost</p>
 <p className="text-2xl sm:text-3xl font-bold text-green-700">
 {totalCost().toFixed(2)} ฿
 </p>
 </div>
 
-<div className="flex flex-col sm:flex-row gap-3 w-full sm:w-auto">
+{/* DESKTOP BUTTONS */}
+<div className="hidden sm:flex gap-3">
 
 <button
 onClick={addRow}
-className="bg-orange-500 text-white px-6 py-2 rounded w-full sm:w-auto">
+className="bg-orange-500 text-white px-6 py-2 rounded">
 + Add Ingredient
 </button>
 
 <button
 onClick={handleExport}
-className="bg-green-600 text-white px-6 py-2 rounded w-full sm:w-auto">
+className="bg-green-600 text-white px-6 py-2 rounded">
 Download File
 </button>
 
-{/* 🔥 เพิ่มตรงนี้ */}
-<label className="bg-blue-500 text-white px-6 py-2 rounded text-center cursor-pointer w-full sm:w-auto">
+<label className="bg-blue-500 text-white px-6 py-2 rounded cursor-pointer">
+Import Excel
+<input
+  type="file"
+  accept=".xlsx, .xls"
+  onChange={handleImport}
+  className="hidden"
+/>
+</label>
+
+</div>
+
+{/* MOBILE BUTTONS */}
+<div className="sm:hidden flex flex-col gap-3 w-full">
+
+<button
+onClick={addRow}
+className="bg-orange-500 text-white px-6 py-3 rounded-lg w-full">
++ Add Ingredient
+</button>
+
+<button
+onClick={handleExport}
+className="bg-green-600 text-white px-6 py-3 rounded-lg w-full">
+Download File
+</button>
+
+<label className="bg-blue-500 text-white px-6 py-3 rounded-lg text-center cursor-pointer w-full">
 Import Excel
 <input
   type="file"
@@ -310,6 +338,8 @@ Import Excel
 </div>
 
 </div>
+
+
 
 </div>
 
