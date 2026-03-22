@@ -102,6 +102,38 @@ export default function Home() {
   function handleExport(){
     exportExcel(); // 🔥 ใช้ Excel ก่อน
   }
+  async function handleImport(e:any){
+
+  const file = e.target.files[0];
+  if(!file) return;
+
+  const data = await file.arrayBuffer();
+
+  const workbook = XLSX.read(data);
+
+  const sheetName = workbook.SheetNames[0];
+  const worksheet = workbook.Sheets[sheetName];
+
+  const json:any = XLSX.utils.sheet_to_json(worksheet);
+
+  const formatted = json.map((r:any)=>{
+
+    const price = Number(r.price || r.Price);
+    const total = Number(r.total || r["Total g"]);
+    const used = Number(r.used || r["Used g"]);
+
+    return {
+      name: r.name || r.Ingredient || "",
+      price: price || "",
+      total: total || "",
+      used: used || "",
+      cost: price && total && used ? (price/total)*used : 0
+    };
+
+  });
+
+  setRows(formatted);
+}
 
   return (
 
@@ -252,15 +284,28 @@ Delete
 
 <div className="flex flex-col sm:flex-row gap-3 w-full sm:w-auto">
 
-<button onClick={addRow}
+<button
+onClick={addRow}
 className="bg-orange-500 text-white px-6 py-2 rounded w-full sm:w-auto">
 + Add Ingredient
 </button>
 
-<button onClick={handleExport}
+<button
+onClick={handleExport}
 className="bg-green-600 text-white px-6 py-2 rounded w-full sm:w-auto">
 Download File
 </button>
+
+{/* 🔥 เพิ่มตรงนี้ */}
+<label className="bg-blue-500 text-white px-6 py-2 rounded text-center cursor-pointer w-full sm:w-auto">
+Import Excel
+<input
+  type="file"
+  accept=".xlsx, .xls"
+  onChange={handleImport}
+  className="hidden"
+/>
+</label>
 
 </div>
 
